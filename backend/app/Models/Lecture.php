@@ -12,6 +12,7 @@ class Lecture extends Model
         'original_filename',
     ];
 
+    // relationship(s)
     // relationship names should be camelCase not PascalCase
     public function user(){
         return $this->belongsTo(User::class);

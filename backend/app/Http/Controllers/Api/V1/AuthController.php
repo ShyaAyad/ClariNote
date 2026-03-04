@@ -10,7 +10,8 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
-    public function register(RegisterRequest $request) {
+    public function register(RegisterRequest $request)
+    {
 
         // validate data
         $data = $request->validated();
@@ -26,18 +27,22 @@ class AuthController extends Controller
 
         return response()->json([
             'message' => 'registered successfully',
-            'access_token' => $token,
-            'token_type' => 'Bearer-token',
-            'user' => $user
+            'status' => 'success',
+            'data' => [
+                'access_token' => $token,
+                'token_type' => 'Bearer',
+                'user' => $user
+            ]
         ], 201);
     }
-    public function login(LoginRequest $request) {
+    public function login(LoginRequest $request)
+    {
 
         // validate data
         $data = $request->validated();
-        
+
         // check user credentials
-        if(!Auth::attempt($data)){
+        if (!Auth::attempt($data)) {
             return response()->json([
                 'message' => 'Invalid user credentials!'
             ], 401);
@@ -49,12 +54,16 @@ class AuthController extends Controller
 
         return response()->json([
             'message' => 'Logged in successfully',
-            'access_token' => $token,
-            'token_type' => 'Bearer-token',
-            'user' => $user
+            'status' => 'success',
+            'data' => [
+                'access_token' => $token,
+                'token_type' => 'Bearer',
+                'user' => $user
+            ]
         ], 200);
     }
-    public function logout() {
+    public function logout()
+    {
         // get currently authenticated user and delete token to log them out
         $user = Auth::user();
         $user->tokens()->delete();
@@ -65,7 +74,8 @@ class AuthController extends Controller
     }
 
     // get current users information (frontend purpose)
-    public function me() {
+    public function me()
+    {
         $user = Auth::user();
         return response()->json([
             'user' => $user

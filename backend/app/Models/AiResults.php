@@ -12,6 +12,7 @@ class AiResults extends Model
         'content'
     ];
 
+    // relationship(s)
     public function lecture(){
         return $this->belongsTo(Lecture::class);
     }
