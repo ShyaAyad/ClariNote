@@ -29,6 +29,11 @@ class LectureController extends Controller
     public function index()
     {
         //
+        $lectures = Lecture::paginate(10);
+        return response()->json([
+            'status' => 'success',
+            'data' => $lectures
+        ], 200);
     }
 
     /**
@@ -40,7 +45,7 @@ class LectureController extends Controller
         $data = $request->validated();
 
         // create a new lecture record in the database
-        $data['user_id'] = auth()->id; // authenticated user id
+        $data['user_id'] = auth()->id(); // authenticated user id
         $lecture = Lecture::create($data);
 
         // handle uploaded PDF
@@ -55,7 +60,7 @@ class LectureController extends Controller
         }
 
         // extract text from PDF
-        $text = \Spatie\PdfToText\Pdf::getText(
+        $text = Pdf::getText(
             $fullPath,
             'C:\Program Files\poppler-25.12.0\Library\bin\pdftotext.exe'
         );
