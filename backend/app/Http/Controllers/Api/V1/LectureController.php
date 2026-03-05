@@ -4,21 +4,16 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Lecture\LectureRequest;
+use App\Http\Resources\LectureResource;
+use App\Http\Resources\LectureTextResource;
 use App\Models\Lecture;
-use Illuminate\Http\Request;
+use App\Models\LectureText;
+use Exception;
 use Spatie\PdfToText\Pdf; // library to extract text from PDF files
 
 /*
 * Methods to implement in this controller:
-* uploadLecture ---> store 
 * summarizeLecture
-* getLecture ---> show 
-* getAllLectures ---> index
-* deleteLecture ---> destroy
-
-$lecture->lectureText()->create([
-        'content' => $extractedText,
-    ]);
 */
 
 class LectureController extends Controller
@@ -28,12 +23,20 @@ class LectureController extends Controller
      */
     public function index()
     {
-        //
-        $lectures = Lecture::paginate(10);
-        return response()->json([
-            'status' => 'success',
-            'data' => $lectures
-        ], 200);
+        // get all lectures that user has uploaded
+        $lectures = Lecture::where('user_id', auth()->id())->paginate(10);
+        return LectureResource::collection($lectures);
+    }
+
+    /**
+     * get lecture content (text)
+     */
+    public function getLectureText()
+    {
+        $content = LectureText::whereHas('lecture', function ($query) {
+            $query->where('user_id', auth()->id());
+        })->paginate(10);
+        return LectureTextResource::collection($content);
     }
 
     /**
@@ -51,12 +54,13 @@ class LectureController extends Controller
         // handle uploaded PDF
         $file = $request->file('file');
 
-        // store PDF in storage/app/lectures
+        // store PDF in a folder named 'lectures' in the storage/app directory
         $path = $file->store('lectures');
-        $fullPath = realpath(storage_path('app/private/' . $path));
+        $fullPath = storage_path('app/' . $path);
 
+        // check if file is readable
         if (!is_readable($fullPath)) {
-            return response()->json(['error' => 'File is not readable: ' . $fullPath]);
+            throw new Exception("File is not readable, please upload readable files only!");
         }
 
         // extract text from PDF
@@ -65,10 +69,14 @@ class LectureController extends Controller
             'C:\Program Files\poppler-25.12.0\Library\bin\pdftotext.exe'
         );
 
+        // store extracted text in the lecture_texts
+        $lecture->lectureText()->create([
+            'content' => $text,
+        ]);
+
         return response()->json([
             'message' => 'Lecture uploaded successfully',
             'lecture' => $lecture,
-            'extractedTextPreview' => $text, // preview only
         ], 201);
     }
     /**
@@ -76,23 +84,19 @@ class LectureController extends Controller
      */
     public function show(string $id)
     {
-        //
-    }
+        $lecture = Lecture::where('id', $id)->where('user_id', auth()->id())->first();
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
+        if (!$lecture) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Lecture not found'
+            ], 404);
+        }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
+        return response()->json([
+            'status' => 'success',
+            'data' => $lecture
+        ], 200);
     }
 
     /**
@@ -100,6 +104,19 @@ class LectureController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $lecture = Lecture::where('id', $id)->where('user_id', auth()->id())->first();
+
+        if (!$lecture) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Lecture not found'
+            ], 404);
+        }
+
+        $lecture->delete();
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Lecture has been deleted successfully!'
+        ], 200);
     }
 }
