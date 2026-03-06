@@ -8,7 +8,9 @@ use App\Http\Resources\LectureResource;
 use App\Http\Resources\LectureTextResource;
 use App\Models\Lecture;
 use App\Models\LectureText;
+use App\Services\GeminiService;
 use Exception;
+use Illuminate\Support\Str;
 use Spatie\PdfToText\Pdf; // library to extract text from PDF files
 
 /*
@@ -79,6 +81,23 @@ class LectureController extends Controller
             'lecture' => $lecture,
         ], 201);
     }
+
+    public function summarizeLecture($id, GeminiService $gemini)
+    {
+        $lecture = Lecture::with('lectureText')
+            ->where('id', $id)
+            ->where('user_id', auth()->id())
+            ->firstOrFail();
+
+        $text = Str::limit($lecture->lectureText->content, 1000); // small test
+        $summary = $gemini->summarize($text);
+
+        return response()->json([
+            'status' => 'success',
+            'summary' => $summary
+        ]);
+    }
+
     /**
      * Display the specified resource.
      */

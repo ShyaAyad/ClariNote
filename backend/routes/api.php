@@ -13,13 +13,9 @@ Route::prefix('v1')->group(function(){
             Route::get('/lectureText', [LectureController::class, 'getLectureText']);
             Route::get('/lecture/{id}', [LectureController::class, 'show']);
             Route::delete('/lecture/{id}', [LectureController::class, 'destroy']);
+            Route::get('/lecture/{id}/summarize', [LectureController::class, 'summarizeLecture']);
     });
-    // Route::middleware('auth:sanctum' )->post('/upload', [LectureController::class, 'store']);// only authenticated users can upload lectures
-    // Route::get('/lectures', [LectureController::class, 'index']);
-    // Route::get('/lectureText', [LectureController::class, 'getLectureText']);
-    // Route::get('/lecture/{id}', [LectureController::class, 'show']);
-    // Route::middleware('auth:sanctum')->delete('/delete/{id}', [LectureController::class, 'destroy']);
-
+    
     Route::controller(AuthController::class)->group(function(){
         Route::post('register', 'register');
         Route::post('login', 'login');
