@@ -18,7 +18,7 @@ class LectureResource extends JsonResource
             'status' => 'success',
             'id' => $this->id,
             'user_id' => $this->user_id,
-            'file_path' => $this->file_path,
+            'original_name' => $this->original_name,
         ];
     }
 }

@@ -6,17 +6,13 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Lecture\LectureRequest;
 use App\Http\Resources\LectureResource;
 use App\Http\Resources\LectureTextResource;
+use App\Models\AiResults;
 use App\Models\Lecture;
 use App\Models\LectureText;
 use App\Services\GeminiService;
 use Exception;
 use Illuminate\Support\Str;
 use Spatie\PdfToText\Pdf; // library to extract text from PDF files
-
-/*
-* Methods to implement in this controller:
-* summarizeLecture
-*/
 
 class LectureController extends Controller
 {
@@ -25,7 +21,7 @@ class LectureController extends Controller
      */
     public function index()
     {
-        // get all lectures that user has uploaded
+        // get all user uploaded lectures
         $lectures = Lecture::where('user_id', auth()->id())->paginate(10);
         return LectureResource::collection($lectures);
     }
@@ -91,6 +87,12 @@ class LectureController extends Controller
 
         $text = Str::limit($lecture->lectureText->content, 1000); // small test
         $summary = $gemini->summarize($text);
+
+        // store summary in the aiResult table (through relationships)
+        $lecture->aiResults()->create([
+            'type' => 'summary', 
+            'content' => $summary
+        ]);
 
         return response()->json([
             'status' => 'success',
