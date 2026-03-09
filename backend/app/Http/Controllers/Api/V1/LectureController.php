@@ -10,7 +10,9 @@ use App\Models\Lecture;
 use App\Models\LectureText;
 use App\Services\GeminiService;
 use Exception;
-use Illuminate\Container\Attributes\DB;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;      
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Spatie\PdfToText\Pdf; // library to extract text from PDF files
 
@@ -22,7 +24,7 @@ class LectureController extends Controller
     public function index()
     {
         // get all user uploaded lectures
-        $lectures = Lecture::where('user_id', auth()->id())->paginate(10);
+        $lectures = Lecture::where('user_id', Auth::id())->paginate(10);
         return LectureResource::collection($lectures);
     }
 
@@ -32,7 +34,7 @@ class LectureController extends Controller
     public function getLectureText()
     {
         $content = LectureText::whereHas('lecture', function ($query) {
-            $query->where('user_id', auth()->id());
+            $query->where('user_id', Auth::id());
         })->paginate(10);
         return LectureTextResource::collection($content);
     }
@@ -44,45 +46,34 @@ class LectureController extends Controller
     {
         // validate the request data
         $data = $request->validated();
-
         // create a new lecture record in the database
-        $data['user_id'] = auth()->id(); // authenticated user id
-        $lecture = Lecture::create($data);
+        $data['user_id'] = Auth::id(); // authenticated user id
 
-        // handle uploaded PDF
-        $file = $request->file('file');
+        // use a transaction to ensure data integrity in case of any failure during the file processing and database operations
+        // becuase there is more one one operation 
+        DB::transaction(function () use ($data, $request) {
+            $lecture = Lecture::create($data);
 
-        // store PDF in a folder named 'lectures' in the storage/app directory
-        $path = $file->store('lectures');
-        $fullPath = storage_path('app/' . $path);
+            $file = $request->file('file');
+            $path = $file->store('lectures');
+            $fullPath = storage_path('app/' . $path);
 
-        // check if file is readable
-        if (!is_readable($fullPath)) {
-            throw new Exception("File is not readable, please upload readable files only!");
-        }
+            if (!is_readable($fullPath)) {
+                Storage::delete($path); 
+                throw new Exception("File is not readable!");
+            }
 
-        // extract text from PDF
-        $text = Pdf::getText(
-            $fullPath,
-            config('services.poppler.path')
-        );
+            $text = Pdf::getText($fullPath, config('services.poppler.path'));
 
-        // store extracted text in the lecture_texts
-        $lecture->lectureText()->create([
-            'content' => $text,
-        ]);
+            $lecture->update(['file_path' => $path]);
 
-        // DB::transaction(function () use ($data, $request) {
-        //     $lecture = Lecture::create($data);
-        //     $path = $request->file('file')->store('lectures');
-        //     // ... extract text ...
-        //     $lecture->lectureText()->create(['content' => $text]);
-        //     $lecture->update(['file_path' => $path]);
-        // });
+            $lecture->lectureText()->create([
+                'content' => $text,
+            ]);
+        });
 
         return response()->json([
             'message' => 'Lecture uploaded successfully',
-            'lecture' => $lecture,
         ], 201);
     }
 
@@ -90,7 +81,7 @@ class LectureController extends Controller
     {
         $lecture = Lecture::with('lectureText')
             ->where('id', $id)
-            ->where('user_id', auth()->id())
+            ->where('user_id', Auth::id())
             ->firstOrFail();
 
         $text = Str::limit($lecture->lectureText->content, 1000); // small test
@@ -113,7 +104,7 @@ class LectureController extends Controller
      */
     public function show(string $id)
     {
-        $lecture = Lecture::where('id', $id)->where('user_id', auth()->id())->first();
+        $lecture = Lecture::where('id', $id)->where('user_id', Auth::id())->first();
 
         if (!$lecture) {
             return response()->json([
@@ -130,7 +121,7 @@ class LectureController extends Controller
      */
     public function destroy(string $id)
     {
-        $lecture = Lecture::where('id', $id)->where('user_id', auth()->id())->first();
+        $lecture = Lecture::where('id', $id)->where('user_id', Auth::id())->first();
 
         if (!$lecture) {
             return response()->json([

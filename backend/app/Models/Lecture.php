@@ -10,6 +10,7 @@ class Lecture extends Model
         'user_id',
         'title',
         'original_filename',
+        'file_path'
     ];
 
     // relationship(s)
