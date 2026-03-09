@@ -39,4 +39,8 @@ return [
         'key' => env('GEMINI_KEY'),
     ],
 
+    'poppler' => [
+        'path' => env('POPPLER_PATH'),
+    ]
+
 ];

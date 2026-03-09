@@ -13,7 +13,7 @@ Route::prefix('v1')->group(function(){
             Route::get('/lectureText', [LectureController::class, 'getLectureText']);
             Route::get('/lecture/{id}', [LectureController::class, 'show']);
             Route::delete('/lecture/{id}', [LectureController::class, 'destroy']);
-            Route::get('/lecture/{id}/summarize', [LectureController::class, 'summarizeLecture']);
+            Route::post('/lecture/{id}/summarize', [LectureController::class, 'summarizeLecture']);
     });
     
     Route::controller(AuthController::class)->group(function(){

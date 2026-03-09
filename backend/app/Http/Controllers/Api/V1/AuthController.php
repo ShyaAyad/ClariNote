@@ -66,7 +66,8 @@ class AuthController extends Controller
     {
         // get currently authenticated user and delete token to log them out
         $user = Auth::user();
-        $user->tokens()->delete();
+        $user->currentAccessToken()->delete();
+        // $user->tokens()->currentAccessToken()->delete();
 
         return response()->json([
             'message' => 'Logged out successfully!'

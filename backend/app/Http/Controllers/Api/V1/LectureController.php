@@ -6,11 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Lecture\LectureRequest;
 use App\Http\Resources\LectureResource;
 use App\Http\Resources\LectureTextResource;
-use App\Models\AiResults;
 use App\Models\Lecture;
 use App\Models\LectureText;
 use App\Services\GeminiService;
 use Exception;
+use Illuminate\Container\Attributes\DB;
 use Illuminate\Support\Str;
 use Spatie\PdfToText\Pdf; // library to extract text from PDF files
 
@@ -64,13 +64,21 @@ class LectureController extends Controller
         // extract text from PDF
         $text = Pdf::getText(
             $fullPath,
-            'C:\Program Files\poppler-25.12.0\Library\bin\pdftotext.exe'
+            config('services.poppler.path')
         );
 
         // store extracted text in the lecture_texts
         $lecture->lectureText()->create([
             'content' => $text,
         ]);
+
+        // DB::transaction(function () use ($data, $request) {
+        //     $lecture = Lecture::create($data);
+        //     $path = $request->file('file')->store('lectures');
+        //     // ... extract text ...
+        //     $lecture->lectureText()->create(['content' => $text]);
+        //     $lecture->update(['file_path' => $path]);
+        // });
 
         return response()->json([
             'message' => 'Lecture uploaded successfully',
@@ -90,7 +98,7 @@ class LectureController extends Controller
 
         // store summary in the aiResult table (through relationships)
         $lecture->aiResults()->create([
-            'type' => 'summary', 
+            'type' => 'summary',
             'content' => $summary
         ]);
 
@@ -114,10 +122,7 @@ class LectureController extends Controller
             ], 404);
         }
 
-        return response()->json([
-            'status' => 'success',
-            'data' => $lecture
-        ], 200);
+        return new LectureResource($lecture);
     }
 
     /**
