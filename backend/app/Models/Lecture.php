@@ -9,7 +9,7 @@ class Lecture extends Model
     protected $fillable = [
         'user_id',
         'title',
-        'original_filename',
+        'original_name',
         'file_path'
     ];
 

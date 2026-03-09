@@ -11,7 +11,7 @@ use App\Models\LectureText;
 use App\Services\GeminiService;
 use Exception;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;      
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Spatie\PdfToText\Pdf; // library to extract text from PDF files
@@ -46,20 +46,21 @@ class LectureController extends Controller
     {
         // validate the request data
         $data = $request->validated();
-        // create a new lecture record in the database
         $data['user_id'] = Auth::id(); // authenticated user id
 
-        // use a transaction to ensure data integrity in case of any failure during the file processing and database operations
-        // becuase there is more one one operation 
+        // create a new lecture record in the database only if all operations succeed
         DB::transaction(function () use ($data, $request) {
-            $lecture = Lecture::create($data);
 
             $file = $request->file('file');
+            $data['original_name'] = $file->getClientOriginalName();
+
+            $lecture = Lecture::create($data);
+
             $path = $file->store('lectures');
             $fullPath = storage_path('app/' . $path);
 
             if (!is_readable($fullPath)) {
-                Storage::delete($path); 
+                Storage::delete($path);
                 throw new Exception("File is not readable!");
             }
 

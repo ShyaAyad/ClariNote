@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\RegisterRequest;
 use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
@@ -62,12 +63,11 @@ class AuthController extends Controller
             ]
         ], 200);
     }
-    public function logout()
+    public function logout(Request $request)
     {
         // get currently authenticated user and delete token to log them out
-        $user = Auth::user();
-        $user->currentAccessToken()->delete();
-        // $user->tokens()->currentAccessToken()->delete();
+        $request->user()->currentAccessToken()->delete();
+        // $user->tokens()->delete(); to delete all tokens (logging out in all devices)
 
         return response()->json([
             'message' => 'Logged out successfully!'
