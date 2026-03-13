@@ -1,8 +1,10 @@
+import PermanentDrawerLeft from "../components/PermanentDrawerLeft.jsx"
+
 const Main = () => {
   return (
     <div>
         {/* side bar on left  */}
-        {/* search input and users lectures */}
+        <PermanentDrawerLeft />
         {/* user profile on top and summary on right  */}
     </div>
   )

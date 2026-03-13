@@ -1,14 +1,23 @@
 import axios from "axios";
+import { useUserStore } from "../store/User.store.js";
 
-const url = "http://localhost:8000/api/v1/";
+// attach token to every request
+const axiosInstance = axios.create({
+  baseURL: "http://localhost:8000/api/v1",
+});
 
-export const register = async (
-  name,
-  email,
-  password,
-  password_confirmation,
-) => {
-  const res = axios.post(url + `register`, {
+axiosInstance.interceptors.request.use((config) => {
+  const token = useUserStore.getState().token;
+
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+
+  return config;
+});
+
+export const register = (name, email, password, password_confirmation) => {
+  const res = axiosInstance.post(`register`, {
     name,
     email,
     password,
@@ -17,12 +26,12 @@ export const register = async (
   return res;
 };
 
-export const login = async (email, password) => {
-  const res = axios.post(url + `login`, { email, password });
+export const login = (email, password) => {
+  const res = axiosInstance.post(`login`, { email, password });
   return res;
 };
 
-export const logout = async() => {
-    const res = axios.post(url + `logout`, {});
-    return res;
-}
+export const logout = () => {
+  const res = axiosInstance.post(`logout`, {});
+  return res;
+};
