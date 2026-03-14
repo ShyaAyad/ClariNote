@@ -48,7 +48,8 @@ class LectureController extends Controller
         $data = $request->validated();
         $data['user_id'] = Auth::id(); // authenticated user id
 
-        // create a new lecture record in the database only if all operations succeed
+        try{
+                    // create a new lecture record in the database only if all operations succeed
         DB::transaction(function () use ($data, $request) {
 
             $file = $request->file('file');
@@ -66,12 +67,22 @@ class LectureController extends Controller
 
             $text = Pdf::getText($fullPath, config('services.poppler.path'));
 
+            if (empty(trim($text))) {
+                Storage::delete($path);
+                throw new Exception("This PDF has no readable text. Please upload a text-based PDF.");
+            }
+
             $lecture->update(['file_path' => $path]);
 
             $lecture->lectureText()->create([
                 'content' => $text,
             ]);
         });
+        } catch (Exception $e) {
+            return response()->json([
+                'message' => 'Failed to upload lecture: ' . $e->getMessage(),
+            ], 400);
+        }
 
         return response()->json([
             'message' => 'Lecture uploaded successfully',
@@ -105,7 +116,7 @@ class LectureController extends Controller
      */
     public function show(string $id)
     {
-        $lecture = Lecture::where('id', $id)->where('user_id', Auth::id())->with('lectureText')->first();
+        $lecture = Lecture::where('id', $id)->where('user_id', Auth::id())->with('lecture_text')->first();
 
         if (!$lecture) {
             return response()->json([
