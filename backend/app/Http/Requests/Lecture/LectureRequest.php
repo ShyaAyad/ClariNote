@@ -23,7 +23,7 @@ class LectureRequest extends FormRequest
     {
         return [
             'title' => 'required|string|max:255',
-            'file' => 'required|file|mimes:pdf|max:204800', // max file size of 200MB, accepted file formates are pdf
+            'file' => 'required|file|mimes:pdf|max:51200', // max file size of 50MB, accepted file formates are pdf
         ];
     }
 }

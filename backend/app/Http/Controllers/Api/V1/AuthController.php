@@ -27,7 +27,7 @@ class AuthController extends Controller
         Auth::login($user);
 
         return response()->json([
-            'message' => 'registered successfully',
+            'message' => 'Registered successfully',
             'status' => 'success',
             'data' => [
                 'access_token' => $token,

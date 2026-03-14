@@ -17,7 +17,6 @@ class LectureResource extends JsonResource
         return [
             'status' => 'success',
             'id' => $this->id,
-            // 'user_id' => $this->user_id,
             'original_name' => $this->original_name,
             'title' => $this->title,
             'created_at' => $this->created_at,
