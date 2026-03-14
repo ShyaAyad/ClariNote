@@ -1,23 +1,23 @@
-import Box from "@mui/material/Box";
-import Drawer from "@mui/material/Drawer";
 import CssBaseline from "@mui/material/CssBaseline";
-import List from "@mui/material/List";
-import Divider from "@mui/material/Divider";
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
-import Toolbar from "@mui/material/Toolbar";
-import Avatar from "@mui/material/Avatar";
-import Typography from "@mui/material/Typography";
+import { Toolbar, Avatar } from "@mui/material";
 import { useUserStore } from "../store/User.store";
-import Button from "@mui/material/Button";
-import LogoutIcon from "@mui/icons-material/Logout";
-import SpaceDashboardRoundedIcon from "@mui/icons-material/SpaceDashboardRounded";
-import UploadFileRoundedIcon from "@mui/icons-material/UploadFileRounded";
-import MiddleC from "./middleC";
+import { Box, Button, Typography, Divider } from "@mui/material";
+import {
+  Drawer,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+} from "@mui/material";
+import {
+  Logout,
+  SpaceDashboardRounded,
+  UploadFileRounded,
+} from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import MiddleC from "./middleC";
 import UploadLecture from "../pages/UploadLecture";
 
 const drawerWidth = 240;
@@ -46,7 +46,11 @@ export default function PermanentDrawerLeft() {
   };
 
   return (
-    <Box sx={{ display: "flex" }}>
+    <Box
+      sx={{
+        display: "flex",
+      }}
+    >
       <CssBaseline />
       <Drawer
         sx={{
@@ -55,6 +59,9 @@ export default function PermanentDrawerLeft() {
           "& .MuiDrawer-paper": {
             width: drawerWidth,
             boxSizing: "border-box",
+            color: "#f0f4ff",
+            background:
+              "linear-gradient(180deg, #0f0f1a 0%, #1a1a2e 50%, #16213e 100%)",
           },
         }}
         variant="permanent"
@@ -94,7 +101,24 @@ export default function PermanentDrawerLeft() {
           </Typography>
         </Toolbar>
         <Divider />
-        <List sx={{ flexGrow: 1 }}>
+        <List
+          sx={{
+            flexGrow: 1,
+            "& .MuiListItemIcon-root": { color: "#a0a8c0" },
+            "& .MuiListItemText-primary": {
+              color: "#b0bcd8",
+              fontFamily: "'Courier New', monospace",
+              fontSize: "14px",
+            },
+            "& .MuiListItemButton-root.Mui-selected": {
+              background: "rgba(99,179,237,0.1)",
+              borderRight: "2px solid #63b3ed",
+            },
+            "& .MuiListItemButton-root:hover": {
+              background: "rgba(255,255,255,0.05)",
+            },
+          }}
+        >
           {["Dashboard", "Upload lecture"].map((text, index) => (
             <ListItem key={text} disablePadding>
               <ListItemButton
@@ -103,9 +127,9 @@ export default function PermanentDrawerLeft() {
               >
                 <ListItemIcon>
                   {index % 2 === 0 ? (
-                    <SpaceDashboardRoundedIcon />
+                    <SpaceDashboardRounded />
                   ) : (
-                    <UploadFileRoundedIcon />
+                    <UploadFileRounded />
                   )}
                 </ListItemIcon>
                 <ListItemText primary={text} />
@@ -118,7 +142,7 @@ export default function PermanentDrawerLeft() {
           <Button
             type="submit"
             variant="contained"
-            startIcon={<LogoutIcon />}
+            startIcon={<Logout />}
             sx={{
               bgcolor: "#212121",
               color: "#fff",
@@ -137,25 +161,16 @@ export default function PermanentDrawerLeft() {
       </Drawer>
       <Box
         component="main"
-        sx={{ flexGrow: 1, bgcolor: "background.default", p: 3 }}
+        sx={{
+          flexGrow: 1,
+          background:
+            "linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 50%, #16213e 100%)",
+          minHeight: "100vh",
+          color: "#f0f4ff",
+          height: "100vh",
+        }}
       >
-        <Toolbar>{changePage()}</Toolbar>
-      </Box>
-      <Box
-        component="main"
-        sx={{ flexGrow: 1, bgcolor: "background.default", p: 3 }}
-      >
-        <Toolbar>
-          <Typography
-          variant="h5"
-            sx={{
-              marginLeft: "10px",
-              fontFamily: "bricolage grotesque, sans-serif",
-            }}
-          >
-            PDF file
-          </Typography>
-        </Toolbar>
+        <Toolbar sx={{margin: "30px 15px"}}>{changePage()}</Toolbar>
       </Box>
     </Box>
   );
