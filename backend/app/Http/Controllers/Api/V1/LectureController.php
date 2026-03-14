@@ -105,7 +105,7 @@ class LectureController extends Controller
      */
     public function show(string $id)
     {
-        $lecture = Lecture::where('id', $id)->where('user_id', Auth::id())->first();
+        $lecture = Lecture::where('id', $id)->where('user_id', Auth::id())->with('lectureText')->first();
 
         if (!$lecture) {
             return response()->json([

@@ -18,6 +18,7 @@ class LectureResource extends JsonResource
             'status' => 'success',
             'id' => $this->id,
             'original_name' => $this->original_name,
+            'content' => $this->lectureText?->content,
             'title' => $this->title,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
