@@ -18,6 +18,7 @@ use Spatie\PdfToText\Pdf; // library to extract text from PDF files
 
 class LectureController extends Controller
 {
+    public function __construct(protected GeminiService $geminiService) {}
     /**
      * Display a listing of the resource.
      */
@@ -48,36 +49,40 @@ class LectureController extends Controller
         $data = $request->validated();
         $data['user_id'] = Auth::id(); // authenticated user id
 
-        try{
-                    // create a new lecture record in the database only if all operations succeed
-        DB::transaction(function () use ($data, $request) {
+        try {
+            // create a new lecture record in the database only if all operations succeed
+            DB::transaction(function () use ($data, $request) {
 
-            $file = $request->file('file');
-            $data['original_name'] = $file->getClientOriginalName();
+                $file = $request->file('file');
+                $data['original_name'] = $file->getClientOriginalName();
 
-            $lecture = Lecture::create($data);
+                $lecture = Lecture::create($data);
 
-            $path = $file->store('lectures');
-            $fullPath = storage_path('app/' . $path);
+                $path = $file->store('lectures');
+                $fullPath = storage_path('app/' . $path);
 
-            if (!is_readable($fullPath)) {
-                Storage::delete($path);
-                throw new Exception("File is not readable!");
-            }
+                if (!is_readable($fullPath)) {
+                    Storage::delete($path);
+                    throw new Exception("File is not readable!");
+                }
 
-            $text = Pdf::getText($fullPath, config('services.poppler.path'));
+                $text = Pdf::getText($fullPath, config('services.poppler.path'));
 
-            if (empty(trim($text))) {
-                Storage::delete($path);
-                throw new Exception("This PDF has no readable text. Please upload a text-based PDF.");
-            }
+                if (empty(trim($text))) {
+                    Storage::delete($path);
+                    throw new Exception("This PDF has no readable text. Please upload a text-based PDF.");
+                }
 
-            $lecture->update(['file_path' => $path]);
+                $formattedText = $this->geminiService->format($text);
+                $lecture->lectureText()->content = $formattedText;
+                $lecture->save();
 
-            $lecture->lectureText()->create([
-                'content' => $text,
-            ]);
-        });
+                $lecture->update(['file_path' => $path]);
+
+                $lecture->lectureText()->create([
+                    'content' => $formattedText,
+                ]);
+            });
         } catch (Exception $e) {
             return response()->json([
                 'message' => 'Failed to upload lecture: ' . $e->getMessage(),
@@ -116,7 +121,7 @@ class LectureController extends Controller
      */
     public function show(string $id)
     {
-        $lecture = Lecture::where('id', $id)->where('user_id', Auth::id())->with('lecture_text')->first();
+        $lecture = Lecture::where('id', $id)->where('user_id', Auth::id())->with('lectureText')->first();
 
         if (!$lecture) {
             return response()->json([
