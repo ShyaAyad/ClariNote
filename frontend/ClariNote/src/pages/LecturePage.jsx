@@ -8,16 +8,20 @@ import {
   Button,
   Skeleton,
 } from "@mui/material";
-import { ArrowBack, AutoAwesome, BookOutlined } from "@mui/icons-material";
+import { ArrowBack, AutoAwesome, DeleteRounded } from "@mui/icons-material";
 import * as api from "../API/api.js";
+import DeleteDialog from "../components/DeleteDialog.jsx";
 
 export default function LecturePage() {
   const { id } = useParams();
   const navigate = useNavigate();
+
+  // states 
   const [lecture, setLecture] = useState(null);
   const [summary, setSummary] = useState("");
   const [loadingLecture, setLoadingLecture] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 
   useEffect(() => {
     const fetch = async () => {
@@ -38,6 +42,12 @@ export default function LecturePage() {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleDelete = async () => {
+    await api.deleteLecture(id);
+    setOpenDeleteDialog(false);
+    navigate("/");
   };
 
   if (loadingLecture) {
@@ -80,19 +90,36 @@ export default function LecturePage() {
         </IconButton>
 
         <Box sx={{ mb: 4 }}>
-          <Typography
-            variant="h4"
+          <Box
             sx={{
-              fontWeight: "700",
-              color: "#f0f4ff",
-              lineHeight: 1.3,
-              fontSize: { xs: "1.6rem", sm: "2rem" },
-              letterSpacing: "-0.02em",
-              mb: 1,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              mb: 0.5,
             }}
           >
-            {lecture.title}
-          </Typography>
+            <Typography
+              variant="h4"
+              sx={{
+                fontWeight: "700",
+                color: "#f0f4ff",
+                lineHeight: 1.3,
+                fontSize: { xs: "1.6rem", sm: "2rem" },
+                letterSpacing: "-0.02em",
+                mb: 1,
+              }}
+            >
+              {lecture.title}
+            </Typography>
+
+            <IconButton onClick={() => setOpenDeleteDialog(true)}>
+              <Button type="submit">
+                <DeleteRounded
+                  sx={{ fontSize: "2.7rem", ml: 1, color: "red" }}
+                />
+              </Button>
+            </IconButton>
+          </Box>
           <Typography
             sx={{
               color: "#606880",
@@ -309,6 +336,13 @@ export default function LecturePage() {
           />
         </Box>
       </Box>
+
+      {/* delete popup dialog */}
+      <DeleteDialog
+        open={openDeleteDialog}
+        onClose={() => setOpenDeleteDialog(false)}
+        onConfirm={handleDelete}
+      />
     </Box>
   );
 }

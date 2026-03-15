@@ -61,3 +61,8 @@ export const summarizeLecture = (id) => {
   const res = axiosInstance.post(`lecture/${id}/summarize`, {});
   return res;
 }
+
+export const deleteLecture = (id) => {
+  const res = axiosInstance.delete(`lecture/${id}`);
+  return res;
+}
