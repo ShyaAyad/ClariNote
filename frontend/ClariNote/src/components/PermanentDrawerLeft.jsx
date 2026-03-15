@@ -148,8 +148,8 @@ export default function PermanentDrawerLeft() {
               color: "#fff",
               margin: "12px",
               borderRadius: "8px",
-              width: "80%",
               textTransform: "none",
+              width: "80%",
               "&:hover": {
                 bgcolor: "#424242",
               },
@@ -170,7 +170,7 @@ export default function PermanentDrawerLeft() {
           height: "100vh",
         }}
       >
-        <Toolbar sx={{margin: "30px 15px"}}>{changePage()}</Toolbar>
+        <Toolbar sx={{ margin: "30px 15px" }}>{changePage()}</Toolbar>
       </Box>
     </Box>
   );

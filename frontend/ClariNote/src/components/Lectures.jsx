@@ -38,20 +38,7 @@ export default function Lectures() {
 
   return (
     <form onSubmit={handleUpload}>
-      <Button
-        component={Link}
-        to="/upload"
-        variant="contained"
-        startIcon={<UploadFileRounded />}
-        sx={{
-          marginBottom: "15px",
-          color: "#fff",
-          borderRadius: "8px",
-        }}
-      >
-        Upload lecture
-      </Button>
-      <Box sx={{ width: "100%" }}>
+      <Box>
         <Stack spacing={2}>
           {lectures.map((lecture, id) => (
             <Item
