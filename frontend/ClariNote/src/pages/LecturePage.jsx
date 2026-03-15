@@ -35,12 +35,27 @@ export default function LecturePage() {
     try {
       const summarizeContent = await api.summarizeLecture(id);
       setSummary(summarizeContent.data);
-    } finally{
+    } finally {
       setIsLoading(false);
     }
   };
 
-  if (loadingLecture) return <CircularProgress />;
+  if (loadingLecture) {
+    return (
+      <Box
+        sx={{
+          minHeight: "100vh",
+          background:
+            "linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 50%, #16213e 100%)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   return (
     <Box
@@ -216,10 +231,32 @@ export default function LecturePage() {
               ✦ AI SUMMARY
             </Typography>
             <Typography
-              sx={{ color: "#c8d6f0", lineHeight: 1.75, fontSize: "15px" }}
-            >
-              {summary.summary}
-            </Typography>
+              dangerouslySetInnerHTML={{ __html: summary.summary }}
+              sx={{
+                color: "#f0f4ff",
+                lineHeight: 1.85,
+                fontSize: "15px",
+                "& h3": {
+                  color: "#63b3ed",
+                  fontWeight: 700,
+                  fontSize: "18px",
+                  mt: 3,
+                  mb: 1,
+                  pb: 0.5,
+                  borderBottom: "1px solid rgba(99,179,237,0.2)",
+                },
+                "& h4": {
+                  color: "#a0bcd8",
+                  fontWeight: 600,
+                  fontSize: "16px",
+                  mt: 2,
+                  mb: 0.5,
+                },
+                "& p": { mb: 1.5 },
+                "& ul": { pl: 3 },
+                "& li": { mb: 0.5, color: "#a0a8c0" },
+              }}
+            />
           </Box>
         )}
 
@@ -235,7 +272,7 @@ export default function LecturePage() {
           <Typography
             sx={{
               color: "#606880",
-              fontSize: "11px",
+              fontSize: "15px",
               fontFamily: "'Courier New', monospace",
               mb: 2,
               letterSpacing: "0.1em",
@@ -244,10 +281,32 @@ export default function LecturePage() {
             CONTENT
           </Typography>
           <Typography
-            sx={{ color: "#b0bcd8", lineHeight: 1.85, fontSize: "15px" }}
-          >
-            {lecture.content}
-          </Typography>
+            dangerouslySetInnerHTML={{ __html: lecture.content }}
+            sx={{
+              color: "#f0f4ff",
+              lineHeight: 1.85,
+              fontSize: "15px",
+              "& h3": {
+                color: "#63b3ed",
+                fontWeight: 700,
+                fontSize: "18px",
+                mt: 3,
+                mb: 1,
+                pb: 0.5,
+                borderBottom: "1px solid rgba(99,179,237,0.2)",
+              },
+              "& h4": {
+                color: "#a0bcd8",
+                fontWeight: 600,
+                fontSize: "16px",
+                mt: 2,
+                mb: 0.5,
+              },
+              "& p": { mb: 1.5 },
+              "& ul": { pl: 3 },
+              "& li": { mb: 0.5, color: "#a0a8c0" },
+            }}
+          />
         </Box>
       </Box>
     </Box>
