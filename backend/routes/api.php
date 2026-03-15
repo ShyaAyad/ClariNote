@@ -7,11 +7,13 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->group(function(){
 
+    Route::get('/search', [LectureController::class, 'search'])->middleware('auth:sanctum'); // search route for lectures
+
     Route::group(['middleware' => 'auth:sanctum'], function(){
             Route::get('/lectures', [LectureController::class, 'index']);
             Route::post('/upload', [LectureController::class, 'store']);
             Route::get('/lectureText', [LectureController::class, 'getLectureText']);
-            Route::get('/lecture/{id}', [LectureController::class, 'show']);
+            Route::get('/lecture/{id}', [LectureController::class, 'show'])->name('lecture.show');
             Route::delete('/lecture/{id}', [LectureController::class, 'destroy']);
             Route::post('/lecture/{id}/summarize', [LectureController::class, 'summarizeLecture'])->middleware('throttle:ai'); // rate limiting request
     });
