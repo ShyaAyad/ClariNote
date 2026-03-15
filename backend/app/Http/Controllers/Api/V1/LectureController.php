@@ -20,20 +20,20 @@ class LectureController extends Controller
 {
     public function __construct(protected GeminiService $geminiService) {}
 
-    public function search(){
+    // public function search(){
 
-        $term = request('title');
+    //     $term = request('title');
 
-        $response = Lecture::with('LectureText')->where('title', 'like', '%' . $term . '%')->get();
+    //     $response = Lecture::with('LectureText')->where('title', 'like', '%' . $term . '%')->get();
 
-        // you must always return array or object to avoid the undefined error in the frontend while mapping through the response
-        return response()->json([
-            'searchResult' => $response,
-            'message' => $response->isEmpty()
-                ? 'No lecture with this title exists'
-                : 'Returned search result successfully'
-        ]);
-    }
+    //     // you must always return array or object to avoid the undefined error in the frontend while mapping through the response
+    //     return response()->json([
+    //         'searchResult' => $response,
+    //         'message' => $response->isEmpty()
+    //             ? 'No lecture with this title exists'
+    //             : 'Returned search result successfully'
+    //     ]);
+    // }
 
     /**
      * Display a listing of the resource.
