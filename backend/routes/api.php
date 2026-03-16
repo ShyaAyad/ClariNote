@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->group(function(){
 
-    // Route::get('/search', [LectureController::class, 'search'])->middleware('auth:sanctum'); // search route for lectures
+    Route::get('/search', [LectureController::class, 'search'])->middleware('auth:sanctum'); // search route for lectures
 
     Route::group(['middleware' => 'auth:sanctum'], function(){
             Route::get('/lectures', [LectureController::class, 'index']);

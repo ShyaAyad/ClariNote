@@ -9,7 +9,7 @@ class GeminiService
     public function summarize($text)
     {
         $response = Http::post(
-            'https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key=' . config('services.gemini.key'),
+            'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=' . config('services.gemini.key'),
             [
                 "contents" => [
                     [
@@ -65,7 +65,7 @@ class GeminiService
     public function format($text)
     {
         $response = Http::post(
-            'https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key=' . config('services.gemini.key'),
+            'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=' . config('services.gemini.key'),
             [
                 "contents" => [
                     [
@@ -76,7 +76,7 @@ class GeminiService
                                         Use <h4> for sub-section titles.
                                         Use <p> for paragraphs.
                                         Use <ul> and <li> for bullet points and lists.
-                                        Do NOT include <html>, <head>, <body>, or the used HTML tags.
+                                        Do NOT include <html>, <head>, <body> tags.
                                         Return ONLY the HTML with no explanation, no markdown, no code fences.
 
                                         Text:
