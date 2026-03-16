@@ -16,13 +16,16 @@ const UploadLecture = () => {
         alert("Please provide both title and pdf file.");
         return;
       }
-
+      setUploading(true);
       const res = await uploadLecture(title, file);
-      console.log("Uploaded file: ", res);
+      console.log(res.data);
     } catch (error) {
       console.error("Error uploading lecture: ", error.response.data);
+    }finally{
+      setUploading(false);
     }
   };
+  
   return (
     <form
       onSubmit={handleUpload}
@@ -114,8 +117,9 @@ const UploadLecture = () => {
           },
         }}
         startIcon={<UploadFileRoundedIcon />}
+        disabled={uploading}
       >
-        Upload
+        {uploading ? "Uploading..." : "Upload PDF"}
       </Button>
     </form>
   );

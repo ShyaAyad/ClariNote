@@ -1,24 +1,24 @@
-import { Box, Button, Paper, Stack, Typography } from "@mui/material";
+import { Box, Paper, Stack, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { UploadFileRounded, PictureAsPdfRounded } from "@mui/icons-material";
+import { PictureAsPdfRounded } from "@mui/icons-material";
 import { useEffect, useState } from "react";
 import * as api from "../API/api.js";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-export default function Lectures() {
-  const Item = styled(Paper)(({ theme }) => ({
-    backgroundColor: "#fff",
-    ...theme.typography.body2,
-    padding: "12px 16px",
-    color: theme.palette.text.primary,
-    display: "flex",
-    alignItems: "center",
-    gap: "10px",
-    borderRadius: "8px",
-    boxShadow: "none",
-    border: "1px solid #e0e0e0",
-  }));
+const Item = styled(Paper)(({ theme }) => ({
+  backgroundColor: "#fff",
+  ...theme.typography.body2,
+  padding: "12px 16px",
+  color: theme.palette.text.primary,
+  display: "flex",
+  alignItems: "center",
+  gap: "10px",
+  borderRadius: "8px",
+  boxShadow: "none",
+  border: "1px solid #e0e0e0",
+}));
 
+export default function Lectures({ searchResults }) {
   const [lectures, setLectuers] = useState([]);
   const navigate = useNavigate();
 
@@ -32,15 +32,17 @@ export default function Lectures() {
     fetchLectures();
   }, []);
 
-  const handleUpload = (e) => {
-    e.preventDefault();
-  };
+  const displayResult = searchResults !== null ? searchResults : lectures;
 
   return (
-    <form onSubmit={handleUpload}>
-      <Box>
-        <Stack spacing={2}>
-          {lectures.map((lecture, id) => (
+    <Box>
+      <Stack spacing={2}>
+        {displayResult.length === 0 ? (
+          <Typography variant="body1" sx={{ color: "text.secondary" }}>
+            No lectures found.
+          </Typography>
+        ) : (
+          displayResult.map((lecture, id) => (
             <Item
               key={id}
               onClick={() => navigate(`/lecture/${lecture.id}`)}
@@ -67,9 +69,9 @@ export default function Lectures() {
                 </Typography>
               </Box>
             </Item>
-          ))}
-        </Stack>
-      </Box>
-    </form>
+          ))
+        )}
+      </Stack>
+    </Box>
   );
 }

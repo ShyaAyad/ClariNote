@@ -1,19 +1,40 @@
 import InputAdornment from "@mui/material/InputAdornment";
 import TextField from "@mui/material/TextField";
 import SearchIcon from "@mui/icons-material/Search";
+import { searchLecture } from "../API/api.js";
+import { useState } from "react";
 
-const SearchInput = () => {
+const SearchInput = ({ setSearchResults }) => {
+  const [searchQuery, setSearchQuery] = useState("");
 
-  const handleSearch = () => {
-  
-  }
+  const handleSearch = async () => {
+    if (searchQuery.trim() === "") {
+      setSearchResults(null);
+      return;
+    }
+
+    try {
+      const resp = await searchLecture(searchQuery);
+      console.log(resp.data.searchResult);
+      setSearchResults(resp.data.searchResult);
+
+    } catch (error) {
+      console.log("Failed to return lecture", error);
+    }
+  };
 
   return (
     <TextField
+      value={searchQuery}
       placeholder="Search lecture..."
       variant="outlined"
       fullWidth
       size="small"
+      onChange={(e) => {
+        setSearchQuery(e.target.value);
+        if (e.target.value === "") setSearchResults(null);
+      }}
+      onKeyDown={(e) => e.key === "Enter" && handleSearch()}
       slotProps={{
         input: {
           startAdornment: (
