@@ -68,8 +68,13 @@ export default function PermanentDrawerLeft() {
         anchor="left"
       >
         <Toolbar>
-          <Avatar variant="square" sx={{ bgcolor: "#212121" }}>
-            AI
+          <Avatar variant="square" sx={{ bgcolor: "transparent", width: "60px", height: "60px" }}>
+            <img
+              src="/clarinote.svg"
+              alt="ClariNote"
+              width="100%"
+              height="100%"
+            />
           </Avatar>
           <Typography
             sx={{
