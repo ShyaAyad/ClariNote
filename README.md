@@ -82,18 +82,6 @@ Make sure the following are installed on your machine before running the project
 ### AI Integration
 - **Gemini API** – Used to analyze lecture text and generate structured summaries
 
-## 🤖 Automation with n8n
-
-This project integrates **n8n** to enhance functionality through automation.
-
-### 🔹 What it does
-- Uses n8n workflows to handle background automation processes  
-- Automatically sends an email to the user after their PDF summary has been successfully generated  
-
-### 🔹 Why it matters
-- Improves user experience by providing instant feedback  
-- Demonstrates real-world use of automation tools in a fullstack application  
-- Reduces manual effort by handling communication automatically  
 ### File Processing
 - **Poppler** – Used to extract text content from uploaded PDF files
 
@@ -103,6 +91,20 @@ This project integrates **n8n** to enhance functionality through automation.
 ### Tools & Development
 - **Postman** – API testing
 - **Git & GitHub** – Version control and project hosting
+
+🤖 Automation with n8n
+
+This project integrates n8n to enhance functionality through automation.
+
+🔹 What it does
+
+Uses n8n workflows to handle background automation processes
+Automatically sends an email to the user after their PDF summary has been successfully generated
+🔹 Why it matters
+
+Improves user experience by providing instant feedback
+Demonstrates real-world use of automation tools in a fullstack application
+Reduces manual effort by handling communication automatically
 
 ## 🚀 How It Works
 
