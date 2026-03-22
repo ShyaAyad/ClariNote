@@ -18,9 +18,9 @@ const UploadLecture = () => {
       }
       setUploading(true);
       const res = await uploadLecture(title, file);
-      console.log(res.data);
+      console.log(res.data.message);
     } catch (error) {
-      console.error("Error uploading lecture: ", error.response.data);
+       console.error("Error uploading lecture: ", error.response?.data || error.message);
     }finally{
       setUploading(false);
     }

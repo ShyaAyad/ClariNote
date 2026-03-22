@@ -12,6 +12,7 @@ use App\Services\GeminiService;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Spatie\PdfToText\Pdf; // library to extract text from PDF files
@@ -122,6 +123,12 @@ class LectureController extends Controller
         $lecture->aiResults()->create([
             'type' => 'summary',
             'content' => $summary
+        ]);
+
+        Http::post('http://localhost:5678/webhook/88bc3b23-f9f9-4d8e-8733-b4eaf26f0ebe', [
+            'email' => Auth::user()->email,
+            'lecture_id' => $lecture->id,
+            'summary' => $summary
         ]);
 
         return response()->json([
