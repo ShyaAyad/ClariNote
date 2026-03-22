@@ -92,19 +92,19 @@ Make sure the following are installed on your machine before running the project
 - **Postman** – API testing
 - **Git & GitHub** – Version control and project hosting
 
-🤖 Automation with n8n
+### 🤖 Automation with n8n
 
-This project integrates n8n to enhance functionality through automation.
+## This project integrates n8n to enhance functionality through automation.
 
 🔹 What it does
 
-Uses n8n workflows to handle background automation processes
-Automatically sends an email to the user after their PDF summary has been successfully generated
+- Uses n8n workflows to handle background automation processes
+- Automatically sends an email to the user after their PDF summary has been successfully generated
 🔹 Why it matters
 
-Improves user experience by providing instant feedback
-Demonstrates real-world use of automation tools in a fullstack application
-Reduces manual effort by handling communication automatically
+- Improves user experience by providing instant feedback
+- Demonstrates real-world use of automation tools in a fullstack application
+- Reduces manual effort by handling communication automatically
 
 ## 🚀 How It Works
 
