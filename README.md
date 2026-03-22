@@ -16,6 +16,7 @@ Your AI-powered assistant that transforms complex PDFs and long texts into clear
 ![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
 ![Poppler](https://img.shields.io/badge/Poppler-PDF_Extraction-grey?style=for-the-badge)
 ![Gemini](https://img.shields.io/badge/Gemini_AI-8E75B2?style=for-the-badge&logo=google&logoColor=white)
+![n8n](https://img.shields.io/badge/n8n-EA4B71?style=for-the-badge&logo=n8n&logoColor=white)
 
 ## 🖼️ Screenshots
 
@@ -81,6 +82,18 @@ Make sure the following are installed on your machine before running the project
 ### AI Integration
 - **Gemini API** – Used to analyze lecture text and generate structured summaries
 
+## 🤖 Automation with n8n
+
+This project integrates **n8n** to enhance functionality through automation.
+
+### 🔹 What it does
+- Uses n8n workflows to handle background automation processes  
+- Automatically sends an email to the user after their PDF summary has been successfully generated  
+
+### 🔹 Why it matters
+- Improves user experience by providing instant feedback  
+- Demonstrates real-world use of automation tools in a fullstack application  
+- Reduces manual effort by handling communication automatically  
 ### File Processing
 - **Poppler** – Used to extract text content from uploaded PDF files
 
