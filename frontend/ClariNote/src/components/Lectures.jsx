@@ -1,6 +1,7 @@
 import { Box, Paper, Stack, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { PictureAsPdfRounded } from "@mui/icons-material";
+import SearchOffIcon from "@mui/icons-material/SearchOff";
 import { useEffect, useState } from "react";
 import * as api from "../API/api.js";
 import { useNavigate } from "react-router-dom";
@@ -38,8 +39,19 @@ export default function Lectures({ searchResults }) {
     <Box>
       <Stack spacing={2}>
         {displayResult.length === 0 ? (
-          <Typography variant="body1" sx={{ color: "text.secondary" }}>
-            No lectures found.
+          <Typography
+            variant="body1"
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              color: "white",
+              textAlign: "center",
+              marginTop: "40px",
+            }}
+          >
+            <SearchOffIcon sx={{ fontSize: 64, color: "white" }} /> No lectures
+            found.
           </Typography>
         ) : (
           displayResult.map((lecture, id) => (
