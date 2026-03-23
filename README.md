@@ -44,6 +44,9 @@ Your AI-powered assistant that transforms complex PDFs and long texts into clear
 ### PDF Summary 
 ![Summary generation](screenshots/summary.png)
 
+### Email Notification 
+![Email Notification](screenshots/emailResponse.jpg)
+
 ## 📌 Features
 
 - Upload a **PDF lecture file**
@@ -69,8 +72,22 @@ Make sure the following are installed on your machine before running the project
 - **Node.js & npm** – for running the frontend
 - **MySQL** – database
 - **Git** – to clone the repository
-
----
+- **n8n** Install n8n via Docker:
+```yaml
+# docker-compose.yml
+version: '3.8'
+services:
+  n8n:
+    image: n8nio/n8n
+    restart: always
+    ports:
+      - "5678:5678"
+    volumes:
+      - ~/.n8n:/home/node/.n8n
+```
+```bash
+docker-compose up -d
+```
 
 ## 🛠️ Tech Stack
 
@@ -98,11 +115,12 @@ Make sure the following are installed on your machine before running the project
 
 🔹 What it does
 
-- Uses n8n workflows to handle background automation processes
-- Automatically sends an email to the user after their PDF summary has been successfully generated
+- Triggers a webhook after Gemini generates the summary
+- Sends a personalized email to the user with their lecture 
+  name and the summary
+  
 🔹 Why it matters
 
-- Improves user experience by providing instant feedback
 - Demonstrates real-world use of automation tools in a fullstack application
 - Reduces manual effort by handling communication automatically
 
@@ -202,3 +220,19 @@ The frontend will be available at:
 ```
 http://localhost:5173
 ```
+
+### 8. Workflow Setup
+1. Open n8n at `http://localhost:5678`
+2. Create a new workflow with these 3 nodes:
+   - **Webhook** node (POST method)
+   - **Edit Fields** node (map email and summaryUrl)
+   - **Gmail** node (send the notification email)
+3. Copy the production webhook URL
+4. Add it to your `.env`:
+```env
+N8N_WEBHOOK_URL=http://localhost:5678/webhook/your-webhook-id
+```
+5. Activate the workflow
+
+> ⚠️ Without n8n running, the app still works normally — 
+> summaries are generated but no email will be sent.
