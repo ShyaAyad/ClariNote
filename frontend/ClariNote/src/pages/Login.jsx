@@ -1,6 +1,6 @@
 import { Box, TextField, Button, Typography } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
-import { useUserStore } from "../store/User.store";
+import { useUserStore } from "../store/user.store.js";
 import { useState } from "react";
 
 const Login = () => {
