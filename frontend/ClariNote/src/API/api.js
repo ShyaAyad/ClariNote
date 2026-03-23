@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useUserStore } from "../store/User.store.js";
+import { useUserStore } from "../store/user.store.js";
 
 // attach token to every request
 const axiosInstance = axios.create({
