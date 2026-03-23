@@ -125,7 +125,7 @@ class LectureController extends Controller
             'content' => $summary
         ]);
 
-        Http::post('http://localhost:5678/webhook/88bc3b23-f9f9-4d8e-8733-b4eaf26f0ebe', [
+        Http::post(env('N8N_WEBHOOK_URL'), [
             'email' => Auth::user()->email,
             'lecture_id' => $lecture->id,
             'summaryUrl'  => url('/lecture/' . $lecture->id)
