@@ -1,6 +1,6 @@
 import { Box, TextField, Button, Typography } from "@mui/material";
 import { useState } from "react";
-import { useUserStore } from "../store/User.store.js";
+import { useUserStore } from "../store/user.store.js";
 import { Link, useNavigate } from "react-router-dom";
 
 function Register() {
