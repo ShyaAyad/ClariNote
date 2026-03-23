@@ -1,6 +1,6 @@
 import CssBaseline from "@mui/material/CssBaseline";
 import { Toolbar, Avatar } from "@mui/material";
-import { useUserStore } from "../store/User.store";
+import { useUserStore } from "../store/user.store.js";
 import { Box, Button, Typography, Divider } from "@mui/material";
 import {
   Drawer,
@@ -17,7 +17,7 @@ import {
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import MiddleC from "./middleC";
+import MiddleC from "./MiddleC";
 import UploadLecture from "../pages/UploadLecture";
 
 const drawerWidth = 240;

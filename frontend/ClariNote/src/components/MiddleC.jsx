@@ -1,5 +1,5 @@
 import Typography from "@mui/material/Typography";
-import { useUserStore } from "../store/User.store";
+import { useUserStore } from "../store/user.store.js";
 import Lectures from "./Lectures";
 import SearchInput from "./SearchInput";
 import { useState } from "react";
