@@ -18,7 +18,7 @@ const MiddleC = () => {
         variant="h6"
         sx={{ marginBottom: "20px", fontWeight: "300", fontFamily: "" }}
       >
-        Welcome back, {user.name}!
+        Welcome back, {user?.name}!
       </Typography>
       <Lectures searchResults={searchResults} />
     </div>
